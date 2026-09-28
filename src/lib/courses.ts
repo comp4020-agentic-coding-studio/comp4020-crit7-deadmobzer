@@ -109,10 +109,14 @@ export function subjectOf(code: string): string {
   return code.match(/^[A-Z]+/)?.[0] ?? code;
 }
 
-// The years and teaching periods the planner offers as columns. A course is
-// only ever offered in "First Semester" or "Second Semester", so a plan slot
-// is one of those crossed with a year.
-export const PLAN_YEARS = [2027, 2028, 2029, 2030];
+// The planner's columns: which year of the degree, crossed with which
+// teaching period. Labelled by year-of-study ("Year 1".."Year 4"), not a
+// calendar year — a calendar year (2027, 2028...) doesn't say anything about
+// how far through the degree a course sits, and reads as if COMP4550 (a
+// capstone, taken in year 4) belongs in year 2 just because it's early in
+// the table. Ordering is still year-then-period, so column order is exactly
+// degree progression.
+export const PLAN_YEARS = ["Year 1", "Year 2", "Year 3", "Year 4"];
 export const TEACHING_PERIODS = ["First Semester", "Second Semester"];
 
 export function planSessions(): string[] {
