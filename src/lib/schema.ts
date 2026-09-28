@@ -16,3 +16,14 @@ export const messages = sqliteTable("messages", {
 });
 
 export type Message = typeof messages.$inferSelect;
+
+export const enrolments = sqliteTable("enrolments", {
+  id: int().primaryKey({ autoIncrement: true }),
+  courseCode: text("course_code").notNull(),
+  session: text().notNull(),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(datetime('now'))`),
+});
+
+export type Enrolment = typeof enrolments.$inferSelect;
