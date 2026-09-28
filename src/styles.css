@@ -1,3 +1,12 @@
+/* ANU brand colours (services.anu.edu.au/marketing-outreach/anu-identity):
+   gold as an accent, never as body text — it's under AA contrast on white. */
+:root {
+  --anu-gold: #be830e;
+  --anu-gold-dark: #8a5c13;
+  --anu-gold-tint: #f5edde;
+  --anu-black: #000;
+}
+
 body {
   margin: 0;
   padding: 2rem;
@@ -12,7 +21,33 @@ main {
 }
 
 a {
-  color: #0b5fff;
+  color: var(--anu-gold-dark);
+}
+
+nav[aria-label="site"] {
+  display: flex;
+  gap: 1.25rem;
+  padding-block-end: 0.75rem;
+  margin-block-end: 1.5rem;
+  border-block-end: 3px solid var(--anu-gold);
+}
+
+nav[aria-label="site"] a {
+  color: var(--anu-black);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+}
+
+nav[aria-label="site"] a:hover {
+  color: var(--anu-gold-dark);
+  text-decoration: underline;
+}
+
+h1 {
+  border-block-end: 2px solid var(--anu-gold);
+  padding-block-end: 0.5rem;
 }
 
 form {
@@ -33,6 +68,16 @@ input {
 button {
   padding: 0.4rem 1rem;
   font: inherit;
+  background: var(--anu-black);
+  color: #fff;
+  border: 1px solid var(--anu-black);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--anu-gold-dark);
+  border-color: var(--anu-gold-dark);
 }
 
 select {
@@ -64,7 +109,8 @@ table.planner td {
 }
 
 table.planner thead th {
-  background: #f2f2f2;
+  background: var(--anu-gold-tint);
+  border-block-end: 2px solid var(--anu-gold);
 }
 
 table.planner tfoot th,
