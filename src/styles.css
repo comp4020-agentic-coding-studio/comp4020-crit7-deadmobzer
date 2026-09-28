@@ -80,3 +80,29 @@ table.planner tfoot td {
 table.planner td.overload {
   color: #b00020;
 }
+
+table.planner td.violation {
+  background: #ffe1e1;
+  color: #b00020;
+  font-weight: 600;
+}
+
+table.checklist td.done {
+  color: #0a7a2f;
+}
+
+table.checklist td.not-done {
+  color: #b00020;
+}
+
+.violations {
+  border: 1px solid #b00020;
+  background: #fff5f5;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-block: 1rem;
+}
+
+.violations h3 {
+  margin-block-start: 0;
+}

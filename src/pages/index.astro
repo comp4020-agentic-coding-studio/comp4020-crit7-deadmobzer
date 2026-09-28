@@ -1,6 +1,7 @@
 ---
 import { listEnrolments, listMessages } from "../lib/db";
 import { coursesByCode, courses, planSessions } from "../lib/courses";
+import { CAPSTONE_OPTIONS, SPECIALISATIONS, buildChecklist, findViolations } from "../lib/requirements";
 import "../styles.css";
 
 const messages = listMessages();
@@ -23,6 +24,20 @@ function unitsFor(session: string): number {
     .get(session)!
     .reduce((sum, e) => sum + (coursesByCode.get(e.courseCode)?.units ?? 0), 0);
 }
+
+// Which specialisation/capstone the requirements checklist checks against —
+// picked via a plain GET form, so the choice survives a reload without JS.
+const specialisationKey = Astro.url.searchParams.get("specialisation") ?? SPECIALISATIONS[0].key;
+const capstoneKey = Astro.url.searchParams.get("capstone") ?? CAPSTONE_OPTIONS[0].key;
+
+const violations = findViolations(enrolments);
+const violationsByCell = new Map<string, string[]>();
+for (const v of violations) {
+  const key = `${v.courseCode}__${v.session}`;
+  violationsByCell.set(key, [...(violationsByCell.get(key) ?? []), v.suggestion]);
+}
+
+const { rows: checklistRows } = buildChecklist(enrolments, specialisationKey, capstoneKey);
 ---
 
 <!doctype html>
@@ -96,8 +111,9 @@ function unitsFor(session: string): number {
                 {sessions.map((session) => {
                   const enrolment = bySession.get(session)![row];
                   const course = enrolment && coursesByCode.get(enrolment.courseCode);
+                  const cellViolations = enrolment ? violationsByCell.get(`${enrolment.courseCode}__${session}`) : undefined;
                   return (
-                    <td>
+                    <td class={cellViolations ? "violation" : ""} title={cellViolations?.join(" ")}>
                       {enrolment ? (course ? `${course.code} — ${course.title}` : enrolment.courseCode) : ""}
                     </td>
                   );
@@ -117,6 +133,71 @@ function unitsFor(session: string): number {
             }
           </tr>
         </tfoot>
+      </table>
+
+      {
+        violations.length > 0 && (
+          <div class="violations" role="alert">
+            <h3>Out of sequence</h3>
+            <ul>
+              {violations.map((v) => (
+                <li>
+                  <strong>{v.courseCode}</strong> ({v.session}): {v.message} {v.suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      <h2>Program requirements</h2>
+      <p>Bachelor of Advanced Computing (Honours) — checked against the courses in your plan above.</p>
+      <form method="get" action="/">
+        <label for="specialisation">Specialisation</label>
+        <select id="specialisation" name="specialisation">
+          {
+            SPECIALISATIONS.map((s) => (
+              <option value={s.key} selected={s.key === specialisationKey}>
+                {s.name}
+              </option>
+            ))
+          }
+        </select>
+        <label for="capstone">Capstone</label>
+        <select id="capstone" name="capstone">
+          {
+            CAPSTONE_OPTIONS.map((c) => (
+              <option value={c.key} selected={c.key === capstoneKey}>
+                {c.name}
+              </option>
+            ))
+          }
+        </select>
+        <button>Update checklist</button>
+      </form>
+      <table class="planner checklist">
+        <thead>
+          <tr>
+            <th scope="col">Requirement</th>
+            <th scope="col">Units</th>
+            <th scope="col">Status</th>
+            <th scope="col">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            checklistRows.map((row) => (
+              <tr>
+                <th scope="row">{row.label}</th>
+                <td>
+                  {row.unitsCompleted}/{row.unitsRequired}
+                </td>
+                <td class={row.done ? "done" : "not-done"}>{row.done ? "✓ done" : "not yet"}</td>
+                <td>{row.detail}</td>
+              </tr>
+            ))
+          }
+        </tbody>
       </table>
     </main>
     <script>
