@@ -41,4 +41,19 @@ describe("enrolment plan", () => {
     expect(body).toContain(courseCode);
     expect(body).toContain(session);
   });
+
+  it("removes the enrolment: the delete form takes it out of the plan", async () => {
+    const listing = await (await fetch(baseUrl)).text();
+    // The unknown test course code renders with no title, so its cell is
+    // just "<span>CODE</span>" followed by its own remove form.
+    const [, id] =
+      listing.match(new RegExp(`>${courseCode}</span>\\s*<form method="post" action="/api/enrolments/(\\d+)"`)) ?? [];
+    expect(id, "expected to find the new enrolment's remove-form id in the page").toBeTruthy();
+
+    const res = await post(`/api/enrolments/${id}`, new URLSearchParams());
+    expect(res.status).toBe(303);
+
+    const body = await (await fetch(baseUrl)).text();
+    expect(body).not.toContain(courseCode);
+  });
 });

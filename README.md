@@ -12,6 +12,9 @@ planner would have been noise, not a feature.
 
 ## What's here
 
+- **A remove button on every plan cell**, alongside adding: each occupied cell
+  posts to `/api/enrolments/:id`, the same no-JS POST-and-redirect shape as
+  adding one, so a wrong entry comes back out the same way it went in.
 - **A real course catalogue** (`src/lib/courses.ts`): the 60 ANU COMP courses
   from the 2027 handbook, plus the non-COMP electives named in the Advanced
   Computing program requirements. The enrolment form picks from it instead of

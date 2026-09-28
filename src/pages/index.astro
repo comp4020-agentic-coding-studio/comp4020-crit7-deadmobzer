@@ -96,7 +96,16 @@ const { rows: checklistRows } = buildChecklist(enrolments, specialisationKey, ca
                   const cellViolations = enrolment ? violationsByCell.get(`${enrolment.courseCode}__${session}`) : undefined;
                   return (
                     <td class={cellViolations ? "violation" : ""} title={cellViolations?.join(" ")}>
-                      {enrolment ? (course ? `${course.code} — ${course.title}` : enrolment.courseCode) : ""}
+                      {enrolment && (
+                        <div class="cell-enrolment">
+                          <span>{course ? `${course.code} — ${course.title}` : enrolment.courseCode}</span>
+                          <form method="post" action={`/api/enrolments/${enrolment.id}`}>
+                            <button type="submit" aria-label={`Remove ${enrolment.courseCode} from ${session}`}>
+                              Remove
+                            </button>
+                          </form>
+                        </div>
+                      )}
                     </td>
                   );
                 })}

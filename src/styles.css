@@ -77,6 +77,22 @@ table.planner td.overload {
   color: #b00020;
 }
 
+.cell-enrolment {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.cell-enrolment form {
+  margin: 0;
+}
+
+.cell-enrolment button {
+  padding: 0.1rem 0.4rem;
+  font-size: 0.75rem;
+}
+
 table.planner td.violation {
   background: #ffe1e1;
   color: #b00020;

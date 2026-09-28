@@ -1,7 +1,7 @@
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import Database from "better-sqlite3";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { type Enrolment, enrolments } from "./schema";
@@ -32,4 +32,8 @@ export function listEnrolments(): Enrolment[] {
 
 export function addEnrolment(courseCode: string, session: string): Enrolment {
   return db.insert(enrolments).values({ courseCode, session }).returning().get();
+}
+
+export function removeEnrolment(id: number): void {
+  db.delete(enrolments).where(eq(enrolments.id, id)).run();
 }
