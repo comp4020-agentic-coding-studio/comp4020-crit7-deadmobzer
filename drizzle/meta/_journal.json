@@ -15,6 +15,13 @@
       "when": 1790555325112,
       "tag": "0001_charming_nocturne",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790560971310,
+      "tag": "0002_conscious_winter_soldier",
+      "breakpoints": true
     }
   ]
 }

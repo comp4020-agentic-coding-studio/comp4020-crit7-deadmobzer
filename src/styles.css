@@ -35,10 +35,6 @@ button {
   font: inherit;
 }
 
-#messages {
-  padding-inline-start: 1.2rem;
-}
-
 select {
   flex: 1;
   min-width: 12rem;

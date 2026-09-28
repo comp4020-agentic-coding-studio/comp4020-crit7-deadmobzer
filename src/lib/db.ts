@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 import { desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import { type Enrolment, type Message, enrolments, messages } from "./schema";
+import { type Enrolment, enrolments } from "./schema";
 
 // One SQLite file is the app's whole persistent state. In production
 // fly.toml points DATABASE_PATH at the machine's volume (/data), which is
@@ -24,15 +24,7 @@ export const db = drizzle(client);
 // commit the migration it writes to drizzle/.
 migrate(db, { migrationsFolder: "./drizzle" });
 
-export type { Message, Enrolment };
-
-export function listMessages(): Message[] {
-  return db.select().from(messages).orderBy(desc(messages.id)).limit(50).all();
-}
-
-export function addMessage(body: string): Message {
-  return db.insert(messages).values({ body }).returning().get();
-}
+export type { Enrolment };
 
 export function listEnrolments(): Enrolment[] {
   return db.select().from(enrolments).orderBy(desc(enrolments.id)).all();
